@@ -1,0 +1,20 @@
+<br>
+<div>
+    <div *ngIf="!isAddDeviceFormVisible">
+        <button class="btn btn-secondary me-2" (click)="toggleAddDeviceForm()">Add new device</button>
+    </div>
+    <app-add-device-form *ngIf="isAddDeviceFormVisible"></app-add-device-form>
+</div>
+
+<hr>
+<p class="text-secondary" style="font-size: large;">Product catalog for Energy Management System.</p>
+<figcaption class="blockquote-footer">
+    Take a look.
+</figcaption>
+
+<div class="row">
+    <ng-container>
+        <app-device class="col-xs-12 col-sm-6 col-md-4 col-lg-4" *ngFor="let deviceEl of deviceList" [device]="deviceEl"
+            style="margin-bottom: 20px;"></app-device>
+    </ng-container>
+</div>

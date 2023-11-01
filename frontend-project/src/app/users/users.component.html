@@ -1,0 +1,54 @@
+<br>
+<hr>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Client</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of allUsersAccounts">
+      <td>{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ !user.isAdmin }}</td>
+      <td>
+        <button type="button" class="btn btn-danger" (click)="deleteUser(user.id)"> <i class="bi bi-trash"></i></button>
+        <button type="button" class="btn btn-secondary" (click)="onEditUser(user.id)"> <i class="bi bi-pencil"></i></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="editMode">
+  <hr>
+  <br>
+  <div class="edit-user-text"> Edit the user with id: {{ selectedUserForEdit.id }} </div>
+  <ng-container>
+    <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" id="name" class="form-control" formControlName="name" />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" formControlName="email" />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" formControlName="password" />
+      </div>
+
+      <div class="center-flex">
+        <button class="btn btn-primary me-5" type="submit" [disabled]="!editUserForm.valid">Submit changes</button>
+        <button class="btn btn-secondary ms-5" type="button" (click)="onBackToUsers()">Close</button>
+      </div>
+    </form>
+  </ng-container>
+</div>

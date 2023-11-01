@@ -1,0 +1,85 @@
+version: '3'
+services:
+  dbuser:
+    image: mysql:latest
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: users
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql1
+    ports:
+      - '3307:3306'
+    networks:
+      - my-network
+
+  dbdevice:
+    image: mysql:latest
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: devices
+    expose:
+      - '3306'
+    ports:
+      - '3308:3306'
+    volumes:
+      - my-db:/var/lib/mysql2
+    networks:
+      - my-network
+
+  user-backend:
+    build: 
+      context: ./backend-user-management
+      dockerfile: ./Dockerfile
+    container_name: backend-user-management
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    depends_on:
+      - dbuser
+    networks:
+      - my-network
+  
+  device-backend:
+    build: 
+      context: ./backend-device-management
+      dockerfile: ./Dockerfile
+    container_name: backend-device-management
+    expose:
+      - '3001'
+    ports:
+      - '3001:3001'
+    depends_on:
+      - dbdevice
+    networks:
+      - my-network
+
+  frontend:
+    build: 
+      context: ./frontend-project
+      dockerfile: ./Dockerfile
+    container_name: frontend
+    expose:
+      - "4200"
+    ports:
+      - "4200:4200"
+    depends_on:
+      - user-backend
+      - device-backend
+      - dbuser
+      - dbdevice
+    networks:
+      - my-network
+    
+networks:
+  my-network:
+    driver: bridge
+    name: my-network
+
+volumes:
+  my-db:
+

@@ -1,0 +1,20 @@
+<div class="page-description">
+<div class="container mt-5 " style="align-items: center;  justify-content: center;">
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">Welcome to the Admin Panel</h1>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col">
+      <div class="button-box">
+        <button class="btn btn-secondary" (click)="navigateToUsers()">Users</button>
+        <button class="btn btn-secondary" (click)="navigateToDevices()">Devices</button>
+        <button class="btn btn-secondary" (click)="navigateToMapping()">Mapping User-Device</button>
+        <button class="btn btn-secondary" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+</div>
