@@ -4,41 +4,77 @@
       {{ device.name }}
     </div>
     <div class="card-body" style="padding: 0.5rem;">
-      <div class="text-center">
-        <p style="font-size: 12px;">
-          {{ device.description }}
-        </p>
-      </div>
-      <hr>
-      <div class="text-center">
-        <p style="font-size: 12px;">
-          <i class="bi bi-card-list"></i> ID: {{ device.id }}
-        </p>
-      </div>
-      <div class="text-center">
-        <hr>
-        <p *ngIf="device.user !== null" style="font-size: 12px;">
-          <i class="bi bi-person-check"></i> Is connected with user: {{ device.user.user_id }}
-        </p>
-        <p *ngIf="device.user === null" style="font-size: 12px;">
-          <i class="bi bi-person-x"></i> Not connected yet
-        </p>
-      </div>
-      <hr>
-      <div class="col">
-        <div class="col image-container clickable">
-          <img [src]="device.imageUrl" alt="Image" class="img-fluid" />
+      <!-- Display device details -->
+      <div *ngIf="!isEditMode">
+        <div class="text-center">
+          <p style="font-size: 12px;">
+            {{ device.description }}
+          </p>
         </div>
-        <hr />
+        <hr>
+        <div class="text-center">
+          <p style="font-size: 12px;">
+            <i class="bi bi-card-list"></i> ID: {{ device.id }}
+          </p>
+        </div>
+        <div class="text-center">
+          <hr>
+          <p *ngIf="device.user !== null" style="font-size: 12px;">
+            <i class="bi bi-person-check"></i> Is connected with user: {{ device.user.user_id }}
+          </p>
+          <p *ngIf="device.user === null" style="font-size: 12px;">
+            <i class="bi bi-person-x"></i> Not connected yet
+          </p>
+        </div>
+        <hr>
+        <div class="col">
+          <div class="col image-container clickable">
+            <img [src]="device.imageUrl" alt="Image" class="img-fluid" />
+          </div>
+          <hr />
+        </div>
+        <div class="text-center">
+          <p style="font-size: 12px;">
+            <i class="bi bi-geo-alt"></i> {{ device.address }} ,
+            <i class="bi bi-lightning-charge"></i> {{ device.maximumHourlyEnergyConsumption }}
+          </p>
+          <button type="button" class="btn btn-danger btn-sm" (click)="deleteDevice(device.id)">
+            <i class="bi bi-trash"></i>
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" (click)="toggleEditMode()">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
       </div>
-      <div class="text-center">
-        <p style="font-size: 12px;">
-          <i class="bi bi-geo-alt"></i> {{ device.address }} ,
-          <i class="bi bi-lightning-charge"></i> {{ device.maximumHourlyEnergyConsumption }}
-        </p>
-        <button type="button" class="btn btn-danger btn-sm" (click)="deleteDevice(device.id)">
-          <i class="bi bi-trash"></i>
-        </button>
+
+      <!-- Edit form -->
+      <div *ngIf="isEditMode">
+        <form [formGroup]="editDeviceForm" (ngSubmit)="onEditDevice(device.id)">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" formControlName="description" />
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" id="address" formControlName="address" />
+          </div>
+          <div class="form-group">
+            <label for="maximumHourlyEnergyConsumption">MaximumHourlyEnergyConsumption</label>
+            <input type="text" class="form-control" id="maximumHourlyEnergyConsumption" formControlName="maximumHourlyEnergyConsumption" />
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image</label>
+            <input type="text" class="form-control" id="imageUrl" formControlName="imageUrl" />
+          </div>
+          <button class="btn btn-secondary" type="submit" [disabled]="!editDeviceForm.valid">Save Changes</button>
+          <button type="button" class="btn btn-danger" (click)="cancelEdit()">
+            Cancel
+          </button>
+        </form>
       </div>
     </div>
   </div>

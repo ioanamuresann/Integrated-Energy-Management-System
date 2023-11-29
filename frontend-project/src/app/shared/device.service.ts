@@ -35,6 +35,10 @@ import { CreateDeviceDto } from "./dtos/create-device.dto";
    
     getUserDevices(userId: string): Observable<Device[]> {
       return this.http.get<Device[]>(`${this.backendUrlDevice}/user-devices/${userId}`);
-  }
+    }
+
+    updateDevice(deviceId: string, deviceDto: CreateDeviceDto): Observable<any> {
+      return this.http.patch(`${this.backendUrlDevice}/${deviceId}`, deviceDto);
+    }
     
   }

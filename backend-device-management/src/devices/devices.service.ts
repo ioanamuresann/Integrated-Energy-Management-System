@@ -1,21 +1,35 @@
-import { HttpServer, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { Repository } from 'typeorm';
 import { CreateDeviceDto } from './dtos/create-device.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from 'src/users/user.entity';
-import { Http2Server } from 'http2';
+import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class DevicesService {
-
+    
+    private readonly deviceServiceClient: ClientProxy;
+    
     constructor(
         @InjectRepository(Device)
         private deviceRepository: Repository<Device>,
         @InjectRepository(User)
         private userRepository: Repository<User>
-    ) { }
+    ) {
+        this.deviceServiceClient = ClientProxyFactory.create({
+            transport: Transport.RMQ,
+            options: {
+              urls: ['amqps://lmatbgmf:dGqZpeoK1Zsdkr71F_M-mg418R_JsNGL@crow.rmq.cloudamqp.com/lmatbgmf'],
+              queue: 'device_changes',
+            },
+          });
+     }
+
+    private publishDeviceEvent(action: string, device: Device): void {
+        this.deviceServiceClient.emit('device_event', { action, device });
+    }
 
     async createDevice(createDeviceDto: CreateDeviceDto): Promise<Device> {
         const device = new Device();
@@ -28,6 +42,7 @@ export class DevicesService {
 
         try {
             const newDevice = await this.deviceRepository.save(device);
+            this.publishDeviceEvent('create', newDevice);
             return newDevice;
         } catch (error) {
             throw new Error(`Failed to create a new device: ${error.message}`);
@@ -52,6 +67,7 @@ export class DevicesService {
     }
       
     async deleteDevice(device: Device) {
+        this.publishDeviceEvent('delete-device', device);
         this.deviceRepository.delete(device);
     }
 
@@ -77,6 +93,7 @@ export class DevicesService {
 
         try {
             await this.deviceRepository.save(device[0]);
+            this.publishDeviceEvent('associateUser', device[0]);
             return true;
         } catch (error) {
             throw new Error(`Failed to associate user with device: ${error.message}`);
@@ -100,6 +117,7 @@ export class DevicesService {
             throw new Error('Device is not associated with a user');
         }
         
+        this.publishDeviceEvent('disconnectUser', device);
         device.user = null;
 
         try {
@@ -130,6 +148,28 @@ export class DevicesService {
         for (const device of devices) {
             device.user = null;
             await this.deviceRepository.save(device);
+        }
+    }
+
+    async updateDevice(id: string, updateDeviceDto: CreateDeviceDto): Promise<Device> {
+        const existingDevice = await this.deviceRepository.findOne({ where: { id } });
+
+        if (!existingDevice) {
+            throw new Error('Device not found');
+        }
+
+        existingDevice.name = updateDeviceDto.name;
+        existingDevice.description = updateDeviceDto.description;
+        existingDevice.address = updateDeviceDto.address;
+        existingDevice.maximumHourlyEnergyConsumption = updateDeviceDto.maximumHourlyEnergyConsumption;
+        existingDevice.imageUrl = updateDeviceDto.imageUrl;
+
+        try {
+            const updatedDevice = await this.deviceRepository.save(existingDevice);
+            this.publishDeviceEvent('update', updatedDevice);
+            return updatedDevice;
+        } catch (error) {
+            throw new Error(`Failed to update device: ${error.message}`);
         }
     }
     

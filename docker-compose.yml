@@ -30,6 +30,21 @@ services:
     networks:
       - my-network
 
+  dbmonitoring:
+    image: mysql:latest
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: monitoring
+    expose:
+      - '3306'
+    ports:
+      - '3309:3306'
+    volumes:
+      - my-db:/var/lib/mysql3
+    networks:
+      - my-network
+
   user-backend:
     build: 
       context: ./backend-user-management
@@ -57,6 +72,20 @@ services:
       - dbdevice
     networks:
       - my-network
+  
+  monitoring-backend:
+    build: 
+      context: ./monitoring-and-communication-backend
+      dockerfile: ./Dockerfile
+    container_name: monitoring-and-communication-backend
+    expose:
+      - '3002'
+    ports:
+      - '3002:3002'
+    depends_on:
+      - dbmonitoring
+    networks:
+      - my-network
 
   frontend:
     build: 
@@ -72,6 +101,8 @@ services:
       - device-backend
       - dbuser
       - dbdevice
+      - monitoring-backend
+      - dbmonitoring
     networks:
       - my-network
     

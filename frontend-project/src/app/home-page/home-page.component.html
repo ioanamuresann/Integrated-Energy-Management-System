@@ -1,21 +1,16 @@
 <div class="page-description">
-    <h2>Welcome to the Energy Management System</h2>
-    <p>
-      This Energy Management System is designed to efficiently manage users and their associated smart energy metering devices. The system provides access to two types of users after a secure login process:
-    </p>
-    <ul>
-      <li><strong>Administrator (Manager):</strong> Administrators have the privilege to perform CRUD (Create-Read-Update-Delete) operations on user accounts, smart energy metering devices, and the mapping of users to devices. Each user can own one or more smart devices in different locations.</li>
-      <li><strong>Clients:</strong> Clients can utilize the system to monitor and manage their smart energy metering devices.</li>
-    </ul>
-    <p>
-      The system enables seamless management of user accounts with attributes including ID, name, and role (admin/client). Smart energy metering devices are defined by their ID, description, address, and maximum hourly energy consumption.
-    </p>
-    <p>
-      Enjoy a streamlined experience as you navigate through this user-friendly Energy Management System.
-    </p>
-    <button class="btn btn-secondary" (click)="navigateToDevices()">See Devices</button>
-    <br>
-    <hr>
+    <div class="container-buttons">
+    <button class="btn btn-secondary small-btn" (click)="navigateToDevices()">See Devices</button>
+    <button class="btn btn-secondary small-btn" (click)="displayUserInfo()">My Profile</button>
+    <button class="btn btn-secondary small-btn" (click)="navigateToHistoricalEnergy()">Historical Energy</button>
+    </div>
+    <div *ngIf="displayUser"  class="user-info-box">
+      <h3>User Information</h3>
+      <p><strong>Name:</strong> {{ loggedUser.name }}</p>
+      <p><strong>Password:</strong> {{ loggedUser.password }}</p>
+      <p><strong>Email:</strong>{{loggedUser.email}}</p>
+      <p><strong>ID:</strong>{{loggedUser.id}}</p>
+    </div>
     <router-outlet></router-outlet>
   </div>
 

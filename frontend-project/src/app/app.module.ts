@@ -16,8 +16,12 @@ import { DeviceListComponent } from './devices/device-list/device-list.component
 import { DevicesComponent } from './devices/devices.component';
 import { MappingUserDeviceComponent } from './mapping-user-device/mapping-user-device.component';
 import { HomePageComponent } from './home-page/home-page.component';
-
-
+import { HistoricalEnergyComponent } from './historical-energy/historical-energy.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatNativeDateModule} from '@angular/material/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,8 +34,8 @@ import { HomePageComponent } from './home-page/home-page.component';
     AddDeviceFormComponent,
     DeviceListComponent,
     MappingUserDeviceComponent,
-    HomePageComponent
-
+    HomePageComponent,
+    HistoricalEnergyComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,11 @@ import { HomePageComponent } from './home-page/home-page.component';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-
+    MatFormFieldModule,
+    MatInputModule, 
+    MatDatepickerModule, 
+    MatNativeDateModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,20 @@
+<div class="container">
+    <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDay"
+            (dateChange)="displayHistoricalEnergy(userLogged, selectedDay.toISOString())">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container">
+                <canvas id="MyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,16 +1,18 @@
-<br>
-<hr>
 <div class="row">
   <div class="connection-box" style="margin-right: 20px">
     <h3 class="title">Connect a device with a user</h3>
     <form [formGroup]="connectForm" (ngSubmit)="connectDevice()">
       <div class="form-group">
-        <label for="deviceID">Device ID</label>
-        <input type="text" id="deviceID" class="form-control" formControlName="deviceID" [(ngModel)]="deviceID" />
+        <label for="selectedDeviceID">Device</label>
+        <select id="selectedDeviceID" class="form-control" formControlName="deviceID" [(ngModel)]="selectedDeviceID">
+          <option *ngFor="let device of devices" [value]="device.id">{{ device.id }} - {{ device.name }}</option>
+        </select>
       </div>
       <div class="form-group">
-        <label for="userID">User ID</label>
-        <input type="text" id="userID" class="form-control" formControlName="userID" [(ngModel)]="userID" />
+        <label for="selectedUserID">User</label>
+        <select id="selectedUserID" class="form-control" formControlName="userID" [(ngModel)]="selectedUserID">
+          <option *ngFor="let user of users" [value]="user.id">{{ user.id }} - {{ user.name }}</option>
+        </select>
       </div>
       <button type="submit" class="btn btn-secondary mt-4 w-100">Connect Device</button>
     </form>
@@ -20,10 +22,13 @@
     <h3 class="title">Disconnect a device</h3>
     <form [formGroup]="disconnectForm" (ngSubmit)="disconnectDevice()">
       <div class="form-group">
-        <label for="newDeviceID">Device ID</label>
-        <input type="text" id="newDeviceID" class="form-control" formControlName="newDeviceID" [(ngModel)]="newDeviceID" />
+        <label for="selectedDisconnectDeviceID">Device</label>
+        <select id="selectedDisconnectDeviceID" class="form-control" formControlName="newDeviceID" [(ngModel)]="selectedDisconnectDeviceID">
+          <option *ngFor="let device of devices" [value]="device.id">{{ device.id }} - {{ device.name }}</option>
+        </select>
       </div>
       <button type="submit" class="btn btn-secondary mt-4 w-100">Disconnect Device</button>
     </form>
   </div>
+  
 </div>

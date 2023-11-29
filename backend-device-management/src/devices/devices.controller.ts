@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dtos/create-device.dto';
 import { Device } from './device.entity';
@@ -47,6 +47,11 @@ export class DevicesController {
     @Delete('clear-user-association/:userId')
     async clearUserAssociation(@Param('userId') userId: string): Promise<void> {
         await this.deviceService.clearUserAssociation(userId);
+    }
+
+    @Patch(':id')
+    updateDevice(@Param('id') id: string, @Body() updateDeviceDto: CreateDeviceDto): Promise<Device> {
+        return this.deviceService.updateDevice(id, updateDeviceDto);
     }
     
     

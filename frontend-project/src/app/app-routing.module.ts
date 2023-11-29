@@ -9,6 +9,7 @@ import { MappingUserDeviceComponent } from './mapping-user-device/mapping-user-d
 import { AdminGuard } from './shared/admin.guard';
 import { AuthGuard } from './shared/auth.guard';
 import { HomePageComponent } from './home-page/home-page.component';
+import { HistoricalEnergyComponent } from './historical-energy/historical-energy.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -26,6 +27,7 @@ const routes: Routes = [
     path: 'client', component: HomePageComponent, canActivate: [AuthGuard],
     children: [
       { path: 'devices', component: ClientComponentComponent },
+      { path: 'historical-energy', component: HistoricalEnergyComponent },
     ]
   },
 ];

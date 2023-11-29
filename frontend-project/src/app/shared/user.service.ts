@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 })
 export class UserService {
   private backendUrlUser = 'http://localhost:3000'; 
+  private backendUrlMonitoring = 'http://localhost:3002'; 
   private currentlyLoggedUser : User =  new User('','','','',false);
   constructor(private http: HttpClient) {}
 
@@ -47,4 +48,9 @@ export class UserService {
   updateUser(id: string, updateUserDto: UpdateUserDto): Observable<void> {
     return this.http.put<void>(`${this.backendUrlUser}/users/${id}`, updateUserDto);
   }
+  
+  getHistoricalEnergyConsumption(userId: string, selectedDay: string): Observable<any> {
+    return this.http.get<any>(`${this.backendUrlMonitoring}/measurement/historical-energy/${userId}/${selectedDay}`);
+  }
+
 }
