@@ -2,6 +2,8 @@ import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { io } from "socket.io-client";
 import { UserService } from '../shared/user.service';
+import { ChatService } from '../chat/chat.service';
+import { Message } from '../chat/chat.component';
 
 @Component({
   selector: 'app-home-page',
@@ -14,7 +16,9 @@ export class HomePageComponent implements OnInit{
    loggedUser = this.userService.getCurrentlyLoggedUser();
    displayUser = false;
 
-   constructor(private router: Router,private userService: UserService){}
+   constructor( private router: Router,
+                private userService: UserService,
+                private chatService: ChatService ){}
 
     navigateToDevices(){
       this.router.navigate(['/client/devices']);
@@ -30,6 +34,13 @@ export class HomePageComponent implements OnInit{
      if(this.loggedUser.id === message[1])
      alert(message[0]);
     });
+    
+    //chat
+    this.chatService.getNewMessages().subscribe((message: Message) => {
+      if(message.reciver === this.loggedUser.name)
+        alert('New message from ' + message.sender);
+    });
+
     }
 
     displayUserInfo() {
@@ -38,5 +49,9 @@ export class HomePageComponent implements OnInit{
 
     navigateToHistoricalEnergy(){
       this.router.navigate(['/client/historical-energy']);
+    }
+
+    chatWithAdmin() {
+      this.router.navigate(['/client/chat']);
     }
 }

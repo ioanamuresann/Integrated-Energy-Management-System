@@ -10,6 +10,8 @@ import { AdminGuard } from './shared/admin.guard';
 import { AuthGuard } from './shared/auth.guard';
 import { HomePageComponent } from './home-page/home-page.component';
 import { HistoricalEnergyComponent } from './historical-energy/historical-energy.component';
+import { ChatComponent } from './chat/chat.component';
+import { ChatAdminComponent } from './chat-admin/chat-admin.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -20,7 +22,8 @@ const routes: Routes = [
     children: [
       { path: 'users', component: UsersComponent },
       { path: 'devices', component: DeviceListComponent },
-      { path: 'mapping', component: MappingUserDeviceComponent }
+      { path: 'mapping', component: MappingUserDeviceComponent },
+      { path: 'chat', component: ChatAdminComponent }
     ]
   },
   {
@@ -28,6 +31,7 @@ const routes: Routes = [
     children: [
       { path: 'devices', component: ClientComponentComponent },
       { path: 'historical-energy', component: HistoricalEnergyComponent },
+      { path: 'chat', component: ChatComponent }
     ]
   },
 ];

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../shared/user.service';
 import { CreateUserDto } from '../shared/dtos/create-user.dto';
 import { User } from '../shared/user.model';
-
+import { ChatService } from '../chat/chat.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -19,7 +19,7 @@ export class LandingPageComponent implements OnInit {
   registerUserForm: FormGroup = new FormGroup({});
 
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, private userService: UserService, private chatService: ChatService) {
   }
 
   ngOnInit(): void {
@@ -31,19 +31,19 @@ export class LandingPageComponent implements OnInit {
 
   }
 
-
   onSubmitUserForm() {
     const email = this.userForm.get('email')?.value;
     const password = this.userForm.get('password')?.value;
-
     this.userService.login(email, password).subscribe(
-      (user: User) => {
+      (response) => {
+        const { access_token, user } = response;
         this.userService.setCurrentlyLoggedUser(user);
-        if(user.isAdmin)
+        this.chatService.connectToWebSocket();
+        if (user.isAdmin)
           this.router.navigate(['/admin']);
         else {
           this.router.navigate(['/client']);
-      }
+        }
       }
     );
   }
@@ -68,8 +68,8 @@ export class LandingPageComponent implements OnInit {
 
       this.userService.createUser(createUserDto).subscribe(
         (user) => {
-        this.userService.setCurrentlyLoggedUser(user);
-        this.router.navigate(['/client']);
+          this.userService.setCurrentlyLoggedUser(user);
+          this.router.navigate(['/client']);
         },
         (error) => {
           console.error('Error registering user', error);

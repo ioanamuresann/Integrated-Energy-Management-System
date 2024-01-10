@@ -5,13 +5,16 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { HttpService } from '@nestjs/axios';
-import axios from 'axios';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from 'src/auth/jwt-payload.interface';
+
 
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(User) private usersRepository: Repository<User>) { }
+    constructor(@InjectRepository(User) private usersRepository: Repository<User>,
+                private jwtService: JwtService
+                 ) { }
 
     async getUsers(): Promise<User[]> {
         return await this.usersRepository.find();
@@ -81,14 +84,29 @@ export class UsersService {
         }
     }
 
-    async authenticateUser(email: string, password: string): Promise<User | null> {
+    // async authenticateUser(email: string, password: string): Promise<User | null> {
+    //     const user = await this.usersRepository.findOne({ where: { email } });
+    //     if (!user) {
+    //         return null; 
+    //     }
+    //     if (password === user.password) {
+    //         return user; 
+    //     }
+    //     return null; 
+    // }
+
+    async authenticateUser(email: string, password: string): Promise<{ access_token: string, user: User } | null> {
         const user = await this.usersRepository.findOne({ where: { email } });
         if (!user) {
-            return null; 
+          return null;
         }
+      
         if (password === user.password) {
-            return user; 
+          const payload: JwtPayload = { email: user.email,  isAdmin: user.isAdmin };
+          const access_token = await this.jwtService.signAsync(payload);
+          return { access_token, user };
         }
-        return null; 
-    }
+        return null;
+      }
+      
 }

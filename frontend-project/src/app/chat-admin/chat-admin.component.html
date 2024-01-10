@@ -1,0 +1,26 @@
+<br>
+<div class="chat-list">
+  <div *ngFor="let conversation of conversations" class="chat-container">
+    <div class="chat-header">
+      <span>Chat Room with {{ conversation.receiver }}</span>
+    </div>
+
+    <div class="chat-messages">
+      <div *ngFor="let message of conversation.messages" class="message" (click)="markAsRead(message)">
+        <p><strong>{{ message.sender }}:</strong> {{ message.content }}</p>
+        <small>{{ message.timestamp | date: 'medium' }}</small>
+      </div>
+    </div>
+    <div *ngIf="sender!=='' && sender===conversation.receiver" class="typing-indicator">
+      {{ sender }} is typing...
+    </div>
+    <form [formGroup]="getForm(conversation.receiver)" (ngSubmit)="onSubmit(conversation.receiver)">
+      <div>
+        <label for="message">Message:</label>
+        <input formControlName="message" id="message" type="text" required (input)="onInputChange($event,conversation.receiver)">
+      </div>
+
+      <button type="submit" [disabled]="!getForm(conversation.receiver).valid">Send Message</button>
+    </form>
+  </div>
+</div>

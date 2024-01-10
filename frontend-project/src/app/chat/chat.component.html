@@ -1,0 +1,29 @@
+<br>
+<div class="chat-container">
+    <div class="chat-header">
+      <span>Chat Room</span>
+    </div>
+  
+    <div class="chat-messages">
+      <div *ngFor="let message of messages" class="message" [ngClass]="{'seen': message.read}">
+        <p><strong>{{ message.sender }}:</strong> {{ message.content }}</p>
+        <small>{{ message.timestamp | date: 'medium' }}</small>
+        <div *ngIf="message.sender === currentLoggedUser" class="status">
+          <span *ngIf="message.read" class="seen-status">seen by {{ message.reciver }}</span>
+          <span *ngIf="!message.read" class="not-seen-status">unseen</span>
+        </div>
+      </div>
+      </div>
+      <div *ngIf="sender!==''" class="typing-indicator">
+        {{ sender }} is typing...
+      </div>
+    <form #form="ngForm" (ngSubmit)="onSubmit()" class="chat-input">
+      <div>
+        <label for="message">Message:</label>
+        <input id="message" ngModel name="message" type="text" required (input)="onInputChange($event)">
+      </div>
+  
+      <button type="submit" [disabled]="!form.valid">Send Message</button>
+    </form>
+  </div>
+  

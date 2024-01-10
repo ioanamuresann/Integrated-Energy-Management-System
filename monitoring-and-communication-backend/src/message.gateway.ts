@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
-import { Server} from 'socket.io';
+import { Server, Socket} from 'socket.io';
 
 @WebSocketGateway({ cors: { origin: 'http://localhost:4200' }})
 export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -9,7 +9,8 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   @WebSocketServer()
   server: Server;
 
-  handleConnection() {
+  handleConnection(socket: Socket) {
+    //console.log('Received token:', socket.handshake.query.token);
     console.log('connected');
   }
 
@@ -22,9 +23,4 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     let message=['Limit exceeded for this device!', userId];
     this.server.emit('sendMessage',message);
   }
-
-  // @SubscribeMessage('sendMessage')
-  // handleSendMessage(userId: string): void {
-  //     this.server.to(userId).emit('sendMessage', 'Limit exceeded for this device!');
-  // }
 }

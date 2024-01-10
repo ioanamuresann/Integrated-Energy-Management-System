@@ -22,6 +22,12 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChatComponent } from './chat/chat.component';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { ChatAdminComponent } from './chat-admin/chat-admin.component';
+
+const config: SocketIoConfig = { url: 'http://localhost:3003', options: {} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,6 +42,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MappingUserDeviceComponent,
     HomePageComponent,
     HistoricalEnergyComponent,
+    ChatComponent,
+    ChatAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +56,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatInputModule, 
     MatDatepickerModule, 
     MatNativeDateModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -20,7 +20,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     },
-  ]),],
+  ])],
   providers: [DevicesService],
   controllers: [DevicesController]
 })

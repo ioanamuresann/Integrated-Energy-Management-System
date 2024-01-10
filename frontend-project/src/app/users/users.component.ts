@@ -21,6 +21,7 @@ export class UsersComponent implements OnInit{
               ){}
 
   ngOnInit(): void {
+
     this.loadAllUsers();
   }
 
@@ -40,6 +41,7 @@ export class UsersComponent implements OnInit{
   loadAllUsers() {
     this.userService.getAllUsers().subscribe(
       (users: User[]) => {
+        console.log(users);
         this.allUsersAccounts = users;
         this.cdr.detectChanges();
       }

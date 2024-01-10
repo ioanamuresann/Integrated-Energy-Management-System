@@ -1,13 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dtos/create-device.dto';
 import { Device } from './device.entity';
+import { AdminGuard } from 'src/shared/admin.guard';
 
 @Controller('devices')
 export class DevicesController {
 
     constructor(private deviceService: DevicesService){}
 
+    @UseGuards(AdminGuard)
     @Post('create-device')
     createDevice(@Body() createDeviceDto: CreateDeviceDto): Promise<Device> {
       return this.deviceService.createDevice(createDeviceDto);
@@ -22,17 +24,20 @@ export class DevicesController {
     getDeviceById(@Param() params): Promise<Device[]> {
         return this.deviceService.getDevice(params.id);
     }
-
+    
+    @UseGuards(AdminGuard)
     @Delete(':id')
     deleteUser(@Param() params) {
         return this.deviceService.deleteDevice(params.id);
     }
-
+    
+    @UseGuards(AdminGuard)
     @Post('associate-user/:userId/:deviceId')
     associateUserWithDevice(@Param('userId') userId: string, @Param('deviceId') deviceId: string): Promise<boolean> {
         return this.deviceService.associateUserWithDevice(userId, deviceId);
     }
    
+    @UseGuards(AdminGuard)
     @Delete('disconnect-device/:deviceId')
     disconnectDeviceFromUser(@Param('deviceId') deviceId: string): Promise<boolean> {
         return this.deviceService.disconnectDeviceFromUser(deviceId);
@@ -49,6 +54,7 @@ export class DevicesController {
         await this.deviceService.clearUserAssociation(userId);
     }
 
+    @UseGuards(AdminGuard)
     @Patch(':id')
     updateDevice(@Param('id') id: string, @Body() updateDeviceDto: CreateDeviceDto): Promise<Device> {
         return this.deviceService.updateDevice(id, updateDeviceDto);

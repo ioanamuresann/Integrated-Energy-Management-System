@@ -87,6 +87,18 @@ services:
     networks:
       - my-network
 
+  chat-backend:
+    build: 
+      context: ./chat-backend
+      dockerfile: ./Dockerfile
+    container_name: chat-backend
+    expose:
+      - '3003'
+    ports:
+      - '3003:3003'
+    networks:
+      - my-network
+
   frontend:
     build: 
       context: ./frontend-project
@@ -103,6 +115,7 @@ services:
       - dbdevice
       - monitoring-backend
       - dbmonitoring
+      - chat-backend
     networks:
       - my-network
     
